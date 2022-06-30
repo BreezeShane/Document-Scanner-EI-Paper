@@ -59,13 +59,18 @@ citecolor=blue]{hyperref}
 	\maketitle
 	\begin{abstract}
 		
-	Document scanning is applied to a wide variety of fields nowadays, but there come out some problems such as the low accuracy of document segmentation, the vagueness of processing results, etc. In this context was proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 000 and a perfect document processing functionality. 
+	Document scanning, a type of Optical Character Recognition Technology, aims at trasferring the documents in captured photographs into scanned document files. 
+	And with the need of convience to gain contents in documents increasing, it is becoming applied to a wide variety of fields nowadays. 
+	However, there also came out some problems such as the low accuracy of document segmentation, the vagueness of processing results, the bad quality of scanned images, etc. 
+	In this context we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.26 and a perfect document processing functionality. 
+	The system use OCRNet to segment documents out meanwhile we make use of Ohem cross entropy loss function to optimize the scanned results. 
+	And after that we have a post processing algorithm combined with affine transformation according to the segmentate results to implementate such a outstanding document scanner system.
 		
 	\end{abstract}
 	
 	\begin{IEEEkeywords}
 		
-		Document Scanner, Document Processing, Semantic Segmentation
+		Document Scanner, Document Processing, Semantic Segmentation.
 		
 	\end{IEEEkeywords}
 	
