@@ -78,12 +78,24 @@ citecolor=blue]{hyperref}
 	
 	\section{Introduction}
 	
+	% introduce background
 
+	% bring out problems
+
+	% introduce OCRNet
+
+	% take a statement why use it
+
+	% show its MIoU
+
+	% introduce post processing section
 	
 	\section{Methods}
 		\subsection{System Design}
 
+		% show flow charts
 
+		% give the statements.
 
 		\subsection{System Implementation}
 
@@ -91,22 +103,42 @@ citecolor=blue]{hyperref}
 
 			\subsubsection{Image Segmentation}
 
+			% introduce the details of OCRNet
 
+			% compare it with U-Net
+			
+			% Show the constructure of OCRNet
+
+			% state the loss: OhemCrossEntropyLoss and DiceLoss
 
 			\subsubsection{Document Processing}
 
+			% fitting the keyt points
 
+			% affine trasfromation
 
 		\subsection{Post Processing}
 
+		% why use it : make image clear & keep colorful (maybe need to mention the low space usage).
 
+		% recognize background color of raw scanned images
+
+		% separate foreground color out according to various threshold values of background colors
+
+		% choose several representive color from foreground colors as index colors
 
 	\section{Experiments}
 
+	% the experiment software & hardware environment
 
+	% the used dataset
 
+	% the algorithm comparition between OCRNet and UNet. Attached some pictures.
+
+	% the post processing comparition between ours and adaptive Binarization thresold.
 	
-	%\cite{panoptic_segmentation} was first proposed by The team of He Kaiming in 2019.
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% \cite{panoptic_segmentation} was first proposed by The team of He Kaiming in 2019.
 		
 	% \begin{figure}[!h]
 	% 	\centering
@@ -139,6 +171,8 @@ citecolor=blue]{hyperref}
 	% 	\end{tabular}
 		
 	% \end{table}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	
 	\section{Summmary And Conclusion}
 
