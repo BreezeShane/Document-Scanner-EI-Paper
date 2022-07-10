@@ -84,29 +84,30 @@ citecolor=blue]{hyperref}
 
 	% bring out problems
 
-	Originally, for most of the systems, the accuracy of document positioning, the legibility of document scanning and the quality of scanned images all cannot satisfy people's needs. 
+	Originally, for most of the systems like hough transformation!!!, key point regression!!!, the accuracy of document positioning, the legibility of document scanning and the quality of scanned images all cannot satisfy people's needs. 
 
 	% introduce OCRNet
 
-	To solve the problems, Yuhui Yuan et al proposed OCRNet, a Object-Contextual Representations network for semantic segmentation. 
-	It use the construction made up of HRNet, OCR and SegFix. 
-	Thereinto, OCR method is divided to three stages. 
-	First, it obtains feature representations from backbone network and then estimates a rough semantic segmentation. 
-	The result will be the input of OCR method and named soft object regions.
-	Second, it computes $k$ vector groups according to soft object regions and feature representations and then make it as object region representations. 
-	Third, it computes the relational matrix of pixel representations from the network's bottommost layer and object region representations. 
-	Then it computes the weighted summation of the object region features based on the value of each pixel and the object region feature represented in the relationship matrix. 
-
+	OCRNet, a object-contextual representation system based on semantic segmentation, is used to be the major component of the system we proposed. 
 
 	% take a statement why use it
 
-	It solved the context aggregation problem in semantic segmentation by making use of target regional representations to enhance its pixel representations. 
+	The reasons for choosing it are: 
+	
+	It solved the context aggregation problem in semantic segmentation by making use of target regional representations to enhance its pixel representations, which evidently improves the quality of segmentation results. 
+	The OCR method it mainly uses is light-weighted, effective, rapid and easy to train.  
 
 	% show its MIoU
 
-	And it reached xxx MIoU score based on xxxx dataset.
+	And it reached xxx MIoU score based on xxxx dataset. 
 
 	% introduce post processing section
+
+	After we gain the result from OCRNet, we will have it post processed. 
+	First, we recognize background color of raw scanned images in it. 
+	Then, we separate foreground color out according to various threshold values of background colors. 
+	After that, we choose several representive color from foreground colors as index colors. 
+	Last, we change the colors in origin image by index colors. 
 	
 	\section{Methods}
 		\subsection{System Design}
@@ -117,11 +118,18 @@ citecolor=blue]{hyperref}
 
 		\subsection{System Implementation}
 
-
-
 			\subsubsection{Image Segmentation}
 
 			% introduce the details of OCRNet
+
+			Yuhui Yuan et al proposed OCRNet, a Object-Contextual Representations network for semantic segmentation. 
+			It use the construction made up of HRNet, OCR and SegFix. 
+			Thereinto, OCR method is divided to three stages. 
+			First, it obtains feature representations from backbone network and then estimates a rough semantic segmentation. 
+			The result will be the input of OCR method and named soft object regions.
+			Second, it computes $k$ vector groups according to soft object regions and feature representations and then make it as object region representations. 
+			Third, it computes the relational matrix of pixel representations from the network's bottommost layer and object region representations. 
+			Then it computes the weighted summation of the object region features based on the value of each pixel and the object region feature represented in the relationship matrix. 
 
 			% compare it with U-Net
 			
@@ -235,31 +243,10 @@ citecolor=blue]{hyperref}
 		% Advanced Hough-based method for on-device document localization
 
 		% Segmentation Transformer: Object-Contextual Representations for Semantic Segmentation
+
+		% Advanced Hough-based method for on-device document localization
+
+		% Real-Time Document Localization in Natural Images by Recursive Application of a CNN
 		
 	\end{thebibliography}
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
