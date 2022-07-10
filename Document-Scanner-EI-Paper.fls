@@ -699,6 +699,7 @@ INPUT Document-Scanner-EI-Paper.aux
 INPUT ./Document-Scanner-EI-Paper.out
 INPUT ./Document-Scanner-EI-Paper.out
 INPUT /usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc
+INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb

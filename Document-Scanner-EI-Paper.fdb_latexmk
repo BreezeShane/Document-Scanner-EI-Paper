@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1656601349 "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" "Document-Scanner-EI-Paper.pdf" "Document-Scanner-EI-Paper" 1656601350
-  "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" 1656601349 7182 73744de11fff1fbb3e8f3c03469639de ""
+["pdflatex"] 1657438323 "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" "Document-Scanner-EI-Paper.pdf" "Document-Scanner-EI-Paper" 1657438323
+  "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" 1657438323 9684 a709b52484e7dc6d43af4a4df2546a00 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1650183167 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1650183167 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1650183167 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -18,6 +18,7 @@
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1650183167 1292 21c1c5bfeaebccffdb478fd231a0997d ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1650183167 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/usr/share/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1650183167 1120 8b7d695260f3cff42e636090a8002094 ""
+  "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1650183167 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1650183167 36281 c355509802a035cadc5f15869451dcee ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1650183167 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1650183167 32716 08e384dc442464e7285e891af9f45947 ""
@@ -93,10 +94,10 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1650183167 39911 2da6c67557ec033436fe5418a70a8a61 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1651553783 4285782 e31cb983c57ff0ea64745503a15bf212 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1651553766 2927655 e7baa5d5797a7671693d73ba45c0c84b ""
-  "Document-Scanner-EI-Paper.aux" 1656601349 1930 8955561d0a88d02c23545a738c344cc5 "pdflatex"
-  "Document-Scanner-EI-Paper.out" 1656601349 1288 b9981549109a0ade808569960355e295 "pdflatex"
-  "Document-Scanner-EI-Paper.tex" 1656601349 7182 73744de11fff1fbb3e8f3c03469639de ""
-  "IEEEtran.cls" 1603422234 206573 ea669a732e0e70bd5fe19ce932d9324a ""
+  "Document-Scanner-EI-Paper.aux" 1657438323 1930 8955561d0a88d02c23545a738c344cc5 "pdflatex"
+  "Document-Scanner-EI-Paper.out" 1657438323 1288 b9981549109a0ade808569960355e295 "pdflatex"
+  "Document-Scanner-EI-Paper.tex" 1657438323 9684 a709b52484e7dc6d43af4a4df2546a00 ""
+  "IEEEtran.cls" 1657431798 206573 ea669a732e0e70bd5fe19ce932d9324a ""
   (generated)
   "Document-Scanner-EI-Paper.aux"
   "Document-Scanner-EI-Paper.log"

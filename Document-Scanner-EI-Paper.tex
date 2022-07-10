@@ -59,13 +59,12 @@ citecolor=blue]{hyperref}
 	\maketitle
 	\begin{abstract}
 		
-	Document scanning, a type of Optical Character Recognition Technology, aims at trasferring the documents in captured photographs into scanned document files. 
+	Document scanning aims at trasferring the documents in captured photographs into scanned document files. 
 	And with the need of convience to gain contents in documents increasing, it is becoming applied to a wide variety of fields nowadays. 
-	However, there also came out some problems such as the low accuracy of document segmentation, the vagueness of processing results, the bad quality of scanned images, etc. 
-	In this context we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.26 and a perfect document processing functionality. 
+	However, there also came out some problems such as the low accuracy of document positioning, the vagueness of processing results, the bad quality of scanned images, etc. 
+	In this paper we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.26 and a perfect document processing functionality. 
 	The system use OCRNet to segment documents out meanwhile we make use of Ohem cross entropy loss function to optimize the scanned results. 
-	And after that we have a post processing algorithm combined with affine transformation according to the segmentate results to implementate such a outstanding document scanner system.
-		
+	And after that, we use affine transformation and other post-processing algorithms according to the segmentation results to gain the well-scanned documents.
 	\end{abstract}
 	
 	\begin{IEEEkeywords}
@@ -80,13 +79,32 @@ citecolor=blue]{hyperref}
 	
 	% introduce background
 
+	Document scanning systems have been mature and widely used in amounts of fields such as official business, administration and so on. 
+	With the demand of on-device document scanning increasing, systems for document scanning are proposed in order to provide office crowd with convience. 
+
 	% bring out problems
+
+	Originally, for most of the systems, the accuracy of document positioning, the legibility of document scanning and the quality of scanned images all cannot satisfy people's needs. 
 
 	% introduce OCRNet
 
+	To solve the problems, Yuhui Yuan et al proposed OCRNet, a Object-Contextual Representations network for semantic segmentation. 
+	It use the construction made up of HRNet, OCR and SegFix. 
+	Thereinto, OCR method is divided to three stages. 
+	First, it obtains feature representations from backbone network and then estimates a rough semantic segmentation. 
+	The result will be the input of OCR method and named soft object regions.
+	Second, it computes $k$ vector groups according to soft object regions and feature representations and then make it as object region representations. 
+	Third, it computes the relational matrix of pixel representations from the network's bottommost layer and object region representations. 
+	Then it computes the weighted summation of the object region features based on the value of each pixel and the object region feature represented in the relationship matrix. 
+
+
 	% take a statement why use it
 
+	It solved the context aggregation problem in semantic segmentation by making use of target regional representations to enhance its pixel representations. 
+
 	% show its MIoU
+
+	And it reached xxx MIoU score based on xxxx dataset.
 
 	% introduce post processing section
 	
@@ -137,7 +155,8 @@ citecolor=blue]{hyperref}
 
 	% the post processing comparition between ours and adaptive Binarization thresold.
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 	% \cite{panoptic_segmentation} was first proposed by The team of He Kaiming in 2019.
 		
 	% \begin{figure}[!h]
@@ -171,8 +190,8 @@ citecolor=blue]{hyperref}
 	% 	\end{tabular}
 		
 	% \end{table}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	\section{Summmary And Conclusion}
 
@@ -212,6 +231,10 @@ citecolor=blue]{hyperref}
 		
 		\bibitem{gps}
 		W. Da-chuan, "Algorithm of road information acquirement based on GPS and electronic map," 2010 3rd International Congress on Image and Signal Processing, Yantai, 2010, pp. 4174-4178, doi: 10.1109/CISP.2010.5646704.
+		% Vyacheslavovich T D, Mikhailovich E A, Petrovich N D. Advanced Hough-based method for on-device document localization[J]. Компьютерная оптика, 2021, 45(5): 702-712.
+		% Advanced Hough-based method for on-device document localization
+
+		% Segmentation Transformer: Object-Contextual Representations for Semantic Segmentation
 		
 	\end{thebibliography}
 \end{document}
