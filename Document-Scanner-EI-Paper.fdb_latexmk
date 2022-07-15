@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1657899619 "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" "Document-Scanner-EI-Paper.pdf" "Document-Scanner-EI-Paper" 1657899620
-  "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" 1657899619 14888 792033932ff16a9a69319e98808bbc60 ""
+["pdflatex"] 1657900569 "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" "Document-Scanner-EI-Paper.pdf" "Document-Scanner-EI-Paper" 1657900569
+  "/home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex" 1657900568 14884 6a6443f741d2425ca6596436e981a850 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1650183167 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1650183167 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1650183167 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -99,9 +99,9 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1651553766 2927655 e7baa5d5797a7671693d73ba45c0c84b ""
   "Assets/FlowChart.png" 1657791998 8040 3657354c6a7a40227873b76d0a53e2f2 ""
   "Assets/final_whole_img.jpg" 1657855497 504038 df20702032ee1106cd0aaf4bf7f2b1ba ""
-  "Document-Scanner-EI-Paper.aux" 1657899620 2509 0fdbdf7fcbeb53c09b071783acf97719 "pdflatex"
-  "Document-Scanner-EI-Paper.out" 1657899620 1298 a07b007cd5413dd7ab30b09227426489 "pdflatex"
-  "Document-Scanner-EI-Paper.tex" 1657899619 14888 792033932ff16a9a69319e98808bbc60 ""
+  "Document-Scanner-EI-Paper.aux" 1657900569 2509 0fdbdf7fcbeb53c09b071783acf97719 "pdflatex"
+  "Document-Scanner-EI-Paper.out" 1657900569 1298 a07b007cd5413dd7ab30b09227426489 "pdflatex"
+  "Document-Scanner-EI-Paper.tex" 1657900568 14884 6a6443f741d2425ca6596436e981a850 ""
   "IEEEtran.cls" 1657431798 206573 ea669a732e0e70bd5fe19ce932d9324a ""
   (generated)
   "Document-Scanner-EI-Paper.aux"
