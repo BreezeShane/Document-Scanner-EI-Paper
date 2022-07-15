@@ -62,7 +62,7 @@ citecolor=blue]{hyperref}
 	Document scanning aims at trasferring the documents in captured photographs into scanned document files. 
 	And with the need of convience to gain contents in documents increasing, it is becoming applied to a wide variety of fields nowadays. 
 	However, there also came out some problems such as the low accuracy of document positioning, the vagueness of processing results, the bad quality of scanned images, etc. 
-	In this paper we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.26 and a perfect document processing functionality. 
+	In this paper we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.255 and a perfect document processing functionality. 
 	The system use OCRNet to segment documents out meanwhile we make use of Ohem cross entropy loss function to optimize the scanned results. 
 	And after that, we use affine transformation and other post-processing algorithms according to the segmentation results to gain the well-scanned documents.
 	\end{abstract}
@@ -99,7 +99,7 @@ citecolor=blue]{hyperref}
 
 	% show its MIoU
 
-	And it reached xxx MIoU score based on xxxx dataset. 
+	And it reached 94.14 MIoU score based on baidu opensource dataset. 
 
 	% introduce post processing section
 
@@ -114,7 +114,19 @@ citecolor=blue]{hyperref}
 
 		% show flow charts
 
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=2.3in]{./Assets/FlowChart.png}
+			\caption{System Procedure}
+		\end{figure}
+
 		% give the statements.
+
+		The procedure of our system is: 
+		First, we use OCRNet to segmentate out the documents in pictures. 
+		Second, we extract out the key points to position the documents. 
+		Third, we affine the key points to become normal. 
+		The last, we get the results post processed. 
 
 		\subsection{System Implementation}
 
@@ -132,78 +144,126 @@ citecolor=blue]{hyperref}
 			Then it computes the weighted summation of the object region features based on the value of each pixel and the object region feature represented in the relationship matrix. 
 
 			% compare it with U-Net
+			By comparing OCRNet with U-Net, we find that U-Net will generate segmentation region cavities while OCRNet won't. 
+			We input baidu opensource dataset to these networks and get the results they generated. 
+			For those results they generated, it's obvious to find that U-Net generate some holes in some segmentation regions. 
+			Meanwhile we learnt that OCRNet generate almost no holes at the same segmentation regions. 
+			Therefore we use OCRNet to structure the system. 
 			
 			% Show the constructure of OCRNet
 
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[width=2.3in]{./Assets/FlowChart.png}
+				\caption{OCRNet Construction}
+			\end{figure}
+
 			% state the loss: OhemCrossEntropyLoss and DiceLoss
+
+			Different from OCRNet, we use Ohem cross entropy loss and dice loss to optimize the network. 
+
+			Ohem cross entropy loss, as known as online hard example mining cross entropy loss, is used to pay close attention to hard examples and set higher weight of them. 
+			The definition of Ohem cross entropy loss is:
+			$$
+			L_{Ohem} = -\log\bigg( \frac{\exp(prediction[groundtruth])}{\sum_i \exp(prediction[i])} \bigg)
+			$$
+			Thereinto, $prediction$ is a probability density function on groundtruth and $prediction[groundtruth]$ is the probability of prediction on the label of corresponding groundtruth. 
+
+			dice loss, proposed by V-Net!!!, is derived from dice coefficient and often seen as a metrical function to estimate comparability of two samples. 
+			The definition of dice loss is: 
+			$$
+			L_{dice} = 1 - \frac{2|prediction\cap groundtruth|}{|prediction| + |groundtruth|}
+			$$
+			Thereinto, $|prediction\cap groundtruth|$ is the intersection between prediction and groundtruth, $|prediction|, |groundtruth|$ is the number of aggregate prediction and groundtruth. 
+			We set the weight of Ohem cross entropy loss to 1 and the weight of dice loss to 0.2, then combine them into a mixed loss function.  
 
 			\subsubsection{Document Processing}
 
 			% fitting the keyt points
+			% https://blog.csdn.net/ooooocj/article/details/110936343
+			We use Douglas-Peucker algorithm to fit the key points. 
+			We first sample from the curve, extract finite points and connect them with lines. 
+			Meanwhile, we use these lines to keep the original shape of the curve. 
+			
+			
 
 			% affine trasfromation
+			After we finish fitting key points, we use getPerspectiveTransform and warpPerspective to affine the key points in order to reshape the scanning results to the normal shape.
+			% Affine Or Perspective ?
+			% https://cloud.tencent.com/developer/article/1638969
+			% https://blog.csdn.net/Caesar6666/article/details/104158047
+			First we set up coordinate axis system of the fitted result, get base points of the fitted result, and then set the target points of the normal view. 
+			Then we compute the transformation matrix according to the two groups of points. 
+			Last we use the matrix to operate the fitted result and then we will get the normal view. 
+			It is equivalent to that we have it transformed into the normal view by translating, rotating, scaling, shearing.
 
-		\subsection{Post Processing}
+			\subsubsection{Post Processing}
 
-		% why use it : make image clear & keep colorful (maybe need to mention the low space usage).
+			% why use it : make image clear & keep colorful (maybe need to mention the low space usage).
+			When we get the result from Document Processing, we still need to post process it. 
+			We aim at making images clear and keeping documents colorful. 
+			Furthermore, it can minimize the images, which is easy and effective to do other oprations like image fixing, image superresolution, etc.
 
-		% recognize background color of raw scanned images
+			% recognize background color of raw scanned images
+			First we obtain background colors from the raw scanned images.
+			
+			% separate foreground color out according to various threshold values of background colors
+			Then we separate foreground colors out according to various threshold values of background colors by transfer RGB format into HSV format. 
+			The reason we choose HSV is that it can easily recognize the lightness and the saturation value of each color. 
+			It enable us to filter those unrepresentative color by setting the thresholds of the difference between lightness and hue value or between saturation and hue value. 
 
-		% separate foreground color out according to various threshold values of background colors
-
-		% choose several representive color from foreground colors as index colors
+			% choose several representive color from foreground colors as index colors
+			The next we select representive colors as index colors from the rest. 
+			And last, we change the less representive colors with corresponding index colors. 
 
 	\section{Experiments}
 
 	% the experiment software & hardware environment
 
 	% the used dataset
+	We use Baidu opensource dataset to go experiments. 
 
 	% the algorithm comparition between OCRNet and UNet. Attached some pictures.
+	We run prediction functionalities of OCRNet and U-Net and then obtaind some results. 
 
-	% the post processing comparition between ours and adaptive Binarization thresold.
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=2.3in]{./Assets/final_whole_img.jpg}
+		\caption{Comparition between OCRNet and UNet}
+	\end{figure}
 
-	% \cite{panoptic_segmentation} was first proposed by The team of He Kaiming in 2019.
+	It's obvious that some masks generated by U-Net have some holes while those makss generated by OCRNet have no holes. 
+	The reason is that OCRNet explicitly enhances the contribution of pixels from the same class of objects when constructing contextual information. 
+	And it solved the problem that UNet is not good at modeling continuous large regions. 
+
+	% the post processing containing adaptive Binarization thresold. 
+	We use adaptive Binarization threshold process to obtain the mask of image.
+	And we gain background colors, extract foreground colors by transferring into HSV format, then filter out representive colors as index colors and at last change colors with corresponding index colors. 
 		
-	% \begin{figure}[!h]
-	% 	\centering
-	% 	\includegraphics[width=2.3in]{system_degisn.jpg}
-	% 	\caption{System Design}
-	% \end{figure}
-	
-	% \begin{table}[!h]
-	% 	\renewcommand{\arraystretch}{1.3}
-	% 	\caption{The Comparison Of Adding The Tracker Before And After}
-	% 	\centering
-	% 	\begin{tabular}{ccccc} \\
-	% 		\hline
-	% 		Class & Without Tracker & Tracker & True Count & Accuracy\\
-	% 		\hline
-	% 		car & 5412 & 141 & 125 & 88.65\% \\
-	% 		\hline
-	% 		bus & 3127 & 4 & 3 & 75.00\% \\
-	% 		\hline
-	% 		truck & 2743 & 3 & 3 & 100.00\% \\
-	% 		\hline
-	% 		traffic light & 4151 & 10 & 8 & 80.00\% \\
-	% 		\hline
-	% 		person & 6189 & 92 & 71 & 77.00\% \\
-	% 		\hline
-	% 		bicycle & 1433 & 32 & 26 & 81.25\% \\
-	% 		\hline
-	% 		motorcycle & 3149 & 56 & 52 & 92.85\% \\
-	% 		\hline
-	% 	\end{tabular}
+	\begin{table}[!h]
+		\renewcommand{\arraystretch}{1.3}
+		\caption{The Comparison Of Models' MIoU on baidu opensource dataset}
+		\centering
+		\begin{tabular}{cc} \\
+			\hline
+			Model & MIoU\\
+			\hline
+			OCRNet(Origin) & 94.14\\
+			\hline
+			U-Net & 94.46\\
+			\hline
+			OCRNet(Ours) & 97.255\\
+			\hline
+		\end{tabular}
 		
-	% \end{table}
-
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\end{table}
 	
 	\section{Summmary And Conclusion}
 
-
+	We build up a document scanning system, which can generate clear and colorful results in good quality. 
+	The system is based on OCRNet and it is extended post process to improve the result of OCRNet. 
+	And we use baidu opensource dataset to improve the quality of model training. 
+	Lastly we make up a mixed loss function combining Ohem cross entropy loss and dice loss to train the model in order to enhance the ability of model processing. 
 	
 	% use section* for acknowledgement
 	\section*{Acknowledgment}
