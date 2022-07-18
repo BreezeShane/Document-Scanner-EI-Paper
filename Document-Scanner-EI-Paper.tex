@@ -38,273 +38,278 @@ citecolor=blue]{hyperref}
 
 
 \begin{document}
-	%
-	% paper title
-	% can use linebreaks \\ within to get better formatting as desired
-	\title{Document Scanner Based on PaddlePaddle}
+%
+% paper title
+% can use linebreaks \\ within to get better formatting as desired
+\title{Document Scanner Based on PaddlePaddle}
+
+\author{\IEEEauthorblockN{Ziqi Shan$^1$\IEEEauthorrefmark{0},
+Xiaochun Lei$^{* 1,2}$\IEEEauthorrefmark{0}
+and Chang Lu$^1$\IEEEauthorrefmark{0}}
+\IEEEauthorblockA{\IEEEauthorrefmark{0}1.School of computer and information security,\\
+Guilin University of Electronic Technology,
+Guilin 541004, China;}
+\IEEEauthorblockA{\IEEEauthorrefmark{0}2.Guangxi Key Laboratory of Image and Graphic Intelligent Processing, \\Guilin 541004, China;}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Corresponding author's e-mail: lxc8125@guet.edu.cn}}
+% use for sepcial paper notices
+%\IEEEspecialpapernotice{(Invited Paper)}
+% make the title area
+\maketitle
+\begin{abstract}
+
+Document scanning aims to transfer the captured photographs documents into scanned document files. 
+However, current methods based on traditional or key point detection have the problem of low detection accuracy.
+In this paper, we proposed a document processing system based on semantic segmentation.
+Our system uses OCRNet to segment documents.
+Then, perspective transformation and other post-processing algorithms are used to obtain well-scanned documents based on the segmentation result.
+Meanwhile, we optimized OCRNet's loss function and reached 97.25 miou on the test dataset.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+
+Document Scanner, Document Processing, Semantic Segmentation.
+
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\section{Introduction}
+
+% introduce background
+
+Document scanning systems have been widely used in many fields such as official business, administration, etc. 
+With the demand for on-device document scanning increasing, document scanning systems are proposed to provide the office crowd with convenience. 
+
+The current document scanning system is mainly based on traditional algorithms or keypoints detection.  \cite{Tropin2021AdvancedHM} proposed a advanced hough-based method for document localization. Javed et al.\cite{javed2017real} proposed a document keypoints detector based on cnn.
+However, for most of those works, the quality of scanned images still can be improved to make a more accurate and robust document capturer.
+
+We propose a document capturer based on semantic segmentation in this work and use advanced post-processing algorithms to gain well-scanned documents.
+The system uses the OCRNet\cite{yuan2020object} to segment documents. 
+OCRNet is based on the object-contextual representation scheme and can achieve a good document segmentation effect. According to the segmentation result, we can fit the four corners of the document. Then we use perspective transformation\cite{lin2010image} and other post-processing methods to make the well-scanned document.
+
+\section{System Design}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=3.2 in]{./Assets/FlowChart.jpg}
+\caption{System Procedure}
+\end{figure}
+
+
+% give the statements.
+
+Figure 1 show the system procedure.
+First, we use OCRNet\cite{yuan2020object} to get the document mask from the input image.
+Second, we extract the four key points of the documents.
+Then we apply a perspective transformation to convert the document image from a 3D image to a 2D scanned image.
+Finally, we use binarization and other post-processing algorithms to enhance the document image. 
+
+\section{Implementation}
+
+\subsection{Image Segmentation}
+
+Semantic segmentation has been widely used in many fields. 
+We use OCRNet\cite{yuan2020object}, a semantic segmentation network, to segment documents in this system. 
+OCRNet solves the context aggregation problem in semantic segmentation by using target regional representations to enhance its pixel representations, which improves the quality of segmentation results. 
+We also use the Ohem cross-entropy\cite{shrivastava2016training} loss to solve the class imbalance problem. 
+
+\subsubsection{Network Architecture}
+
+\begin{figure*}[!h]
+	\centering
+	\includegraphics[width=7in]{./Assets/131245.jpg}
+	\caption{The Architecture of OCRNet}
+\end{figure*}
+
+The architecture of OCRNet is shown in Figure 2. OCRNet in our system choose HRNet-W48\cite{wang2020deep} as the backbone. In the following stage, OCRNet first divides the contextual pixels into a set of soft object regions based on the output of the backbone. Each region corresponds to a class. Based on soft object regions and pixel representations of the backbone, OCRNet calculates a group vector called Object Region Representations. Each of these vectors corresponds to a semantic category's feature. Next, OCRNet will calculate the relations between pixel object regions. The OCR is the weighted aggregation of all the object region representations with the weights calculated according to the relations between pixels and object regions\cite{yuan2020object}. Finally, OCR and deep network features are combined as augmented representations.
+
+
+\subsubsection{Loss Function}
+
+The loss function of OCRNet in our system contains two parts: the Ohem cross-entropy loss\cite{shrivastava2016training} and the Dice loss\cite{milletari2016v}.
+Ohem cross-entropy loss can help to solve the class imbalance problem. Dice loss is used to measure whether the predicted mask is close to the groundtruth. Our loss function is defined as follows:
+
+\begin{equation}
+	L = L_{Ohem} + w L_{Dice}
+\end{equation}
+
+$w$ is weight coefficient. We choose $w = 0.2$ in this work. $L_{Ohem}$ is the Ohem cross-entropy loss and $L_{Dice}$ is the Dice loss. Ohem cross-entropy loss, known as online hard example mining cross-entropy loss, is used to pay close attention to hard examples and set a higher weight. Let $\mathcal{M}$ be the predicted mask. $\mathcal{G}$ is the groundtruth mask of the image. $L_{Ohem}$ is defined as follows:
+
+\begin{equation}
+	L_{Ohem} = \sum_{i=1}^{N} \max_{i=1}^{N} \mathcal{M}_i log(\mathcal{G}_i) \\
+\end{equation}
+
+$L_{Ohem}$ first calculates each pixel's loss, then sums the top k loss items. It selects hard examples as training samples to improve the effect of network parameters. $L_{Dice}$ is derived from the dice coefficient and is often used as the metric function to estimate the comparability of two samples.  $L_{Dice}$ is defined as follows:
+
+\begin{equation}
+	L_{Dice} = 1 - \frac{2|\mathcal{M} \cap \mathcal{G}|}{|\mathcal{M}| + |\mathcal{G}|}
+\end{equation}
+
+
+\subsection{Perspective Transformation}
+
+% fitting the keyt points
+% https://blog.csdn.net/ooooocj/article/details/110936343
+After we obtain the predicted mask, we can carry the perspective transformation to the image according to the mask.
+The process is shown in the Figure 3. First, we use the canny\cite{bao2005canny} algorithm to extract the edge of the mask. Then we use the Douglas-Peucker algorithm\cite{wu2004douglas} to find the four corners of the edge. According to the key points, we can calculate the perspective transformation matrix. Then we apply the perspective transformation to the image according to the matrix to convert it from a 3D image to a 2D image.
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=2.8in]{./Assets/123.jpg}
+	\caption{The process of perspective transformation}
+\end{figure}
+
+\subsection{Post Processing}
+
+\label{post-process}
+
+% why use it : make image clear & keep colorful (maybe need to mention the low space usage).
+In the last step, we obtain the 2D view document image. Inorder to get the better quality of the document image, we use post-processing algorithms to enhance the document image. The post-processing algorithms mainly include separating the background and foreground colours.
+
+\subsubsection{Separate Background Colors}
+
+% recognize background color of raw scanned images
+The usual method to separate background colours is by analyzing the number of pixel values.
+However, even the largest number pixel value of an 8-bit colour image is a tiny percentage (under 10\%) of all pixels.
+Therefore, we convert an 8-bit channel colour image to a 6-bit channel colour image.
+Reducing the pixel type will help determine the background colour.
+By analyzing the 6-bit colour image's pixel value number, we can determine the background colour. Document images are enhanced by replacing the background colour with white.
+
+\subsubsection{Separate Foreground Colors}
+
+\label{separate-foreground-colors}
+Once the background colour has been identified, we can calculate the foreground colour by calculating how similar each pixel is to the background colour.
+We first convert the image to HSV color space.
+Then we calculate the European distance between each pixel and the background colour.
+To make the image more colourful, we cluster the foreground pixels into eight groups using k-means\cite{hartigan1979algorithm}. 
+We will assign every foreground colour to one of the eight groups. 
+
+
+\section{Experiments}
+
+This section will introduce the experiment setup, image segmentation, and post-processing result. We will also compare different image segmentation methods and post-processing methods. 
+% the experiment software & hardware environment
+
+\begin{table}
+	\caption{Experiment Environment}
+	\begin{tabular}{cc}
+		\hline Equipment & Configuration Information \\
+		\hline CPU & Intel(R) Xeon(R) Gold CPU @ 3.00GHz \\
+		 RAM & 64G \\
+		 GPU & Tesla V100-PCIE-32GB \\
+		 OS & Ubuntu 16.04.3 LTS \\
+		 Programming Language & Python \\
+		 DL Framework & Pytorch \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Experiment Setup}
+
+
+Our experiment environment is shown in Table 1. 
+We choose the OCRNet\cite{yuan2020object} and U-net\cite{ronneberger2015u} for image segmentation to compare the result.
+For the post-processing algorithm, we compare the adaptive binarization method and our method described in Section \ref{post-process}.
+For our experiments, we use Baidu's open-source document dataset. 
+
+
+
+
+\subsection{Experiment Results}
+
+\begin{figure}[!t]
+	\centering
+	\label{figure:Comparition}
+	\includegraphics[width=3.2in]{./Assets/final_whole_img.jpg}
+	\caption{Comparition between OCRNet and UNet}
+\end{figure}
 	
-	\author{\IEEEauthorblockN{Chang Lu$^1$\IEEEauthorrefmark{0},
-			Xiaochun Lei$^{* 1,2}$\IEEEauthorrefmark{0},
-			Junlin Xie$^1$\IEEEauthorrefmark{0}, 
-			Xiaolong Wang$^1$\IEEEauthorrefmark{0} and
-			XiangBoge Mu$^1$\IEEEauthorrefmark{0}}
-		\IEEEauthorblockA{\IEEEauthorrefmark{0}1.School of computer and information security,\\
-			Guilin University of Electronic Technology,
-			Guilin 541004, China;}
-		\IEEEauthorblockA{\IEEEauthorrefmark{0}2.Guangxi Key Laboratory of Image and Graphic Intelligent Processing, \\Guilin 541004, China;}
-		\IEEEauthorblockA{\IEEEauthorrefmark{1}Corresponding author's e-mail: glleixiaochun@qq.com}}
-	% use for sepcial paper notices
-	%\IEEEspecialpapernotice{(Invited Paper)}
-	% make the title area
-	\maketitle
-	\begin{abstract}
-		
-	Document scanning aims at trasferring the documents in captured photographs into scanned document files. 
-	And with the need of convience to gain contents in documents increasing, it is becoming applied to a wide variety of fields nowadays. 
-	However, there also came out some problems such as the low accuracy of document positioning, the vagueness of processing results, the bad quality of scanned images, etc. 
-	In this paper we proposed a document processing system based on Semantic Segmentation, which has a great MIoU rank 97.255 and a perfect document processing functionality. 
-	The system use OCRNet to segment documents out meanwhile we make use of Ohem cross entropy loss function to optimize the scanned results. 
-	And after that, we use affine transformation and other post-processing algorithms according to the segmentation results to gain the well-scanned documents.
-	\end{abstract}
-	
-	\begin{IEEEkeywords}
-		
-		Document Scanner, Document Processing, Semantic Segmentation.
-		
-	\end{IEEEkeywords}
-	
-	\IEEEpeerreviewmaketitle
-	
-	\section{Introduction}
-	
-	% introduce background
 
-	Document scanning systems have been mature and widely used in amounts of fields such as official business, administration and so on. 
-	With the demand of on-device document scanning increasing, systems for document scanning are proposed in order to provide office crowd with convience. 
+\subsubsection{Image Segmentation}
 
-	% bring out problems
+We compare three groups of image segmentation methods: OCRNet(without the Ohem loss), U-Net, and OCRNet(Ours). 
+The experiment result is shown in Table \ref{table:comparition}.
+OCRNet(Ours) achieve the best result (94.14\% miou) on the test dataset.
+By comparing OCRNet with U-Net, we can find that U-Net's prediction masks have some holes, as shown in Figure \ref{figure:Comparition}. 
+OCRNet, because of its context aggregation strategy, performs excellently in document segmentation.
 
-	Originally, for most of the systems like hough transformation!!!, key point regression!!!, the accuracy of document positioning, the legibility of document scanning and the quality of scanned images all cannot satisfy people's needs. 
+\begin{table}[!h]
+	\caption{The Comparison of Different Models}
+	\centering
+	\label{table:comparition}
+	\begin{tabular}{ccc} \\
+	\hline
+	Model & MIoU(\%) & Mean Acc(\%)\\
+	\hline
+	OCRNet(Origin) & 94.14 & 96.15\\
+	U-Net & 94.46 & 96.64\\
+	OCRNet(Ours) & 97.26 & 99.36\\
+	\hline
+	\end{tabular}
+\end{table}
 
-	% introduce OCRNet
+\subsubsection{Image Post Processing}
+% the used dataset
+We compare two image post processint method: adaptive binarization and our method. 
+Adaptive binarization is widely used in image enhancement. 
+Our method is based on the idea of separation of foreground and background and is described at Section \ref{separate-foreground-colors}.
+Figure \ref{figure:post-process} show the comparition of the two methods.
+Adaptive binarization performs better when the image is not noisy.
+However, when the image is noisy, the adaptive binarization method is unsuitable, as shown in the third row of Figure \ref{figure:post-process}.
+In the meantime, adaptive binarization will result in grayscale images.
+Our method is better when the image is noisy. 
+And we can make the scanned document colorful.
 
-	OCRNet, a object-contextual representation system based on semantic segmentation, is used to be the major component of the system we proposed. 
+\begin{figure}[!h]
+	\centering
+	\label{figure:post-process}
+	\includegraphics[width=3.0in]{./Assets/12345.jpg}
+	\caption{Post-processing Method Comparition}
+\end{figure}
 
-	% take a statement why use it
 
-	The reasons for choosing it are: 
-	
-	It solved the context aggregation problem in semantic segmentation by making use of target regional representations to enhance its pixel representations, which evidently improves the quality of segmentation results. 
-	The OCR method it mainly uses is light-weighted, effective, rapid and easy to train.  
 
-	% show its MIoU
+\section{Conclusion}
 
-	And it reached 94.14 MIoU score based on baidu opensource dataset. 
+In this paper, we build a document scanning system to generate precise and colorful results.
+The system is based on image segmentation. We use OCRNet to produce the document segmentation mask. Meanwhile, we use a mixed loss function combining Ohem cross entropy and dice loss to improve the model.
+We also use an advanced post-processing method to enhance the scanned image.
 
-	% introduce post processing section
 
-	After we gain the result from OCRNet, we will have it post processed. 
-	First, we recognize background color of raw scanned images in it. 
-	Then, we separate foreground color out according to various threshold values of background colors. 
-	After that, we choose several representive color from foreground colors as index colors. 
-	Last, we change the colors in origin image by index colors. 
-	
-	\section{Methods}
-		\subsection{System Design}
 
-		% show flow charts
+% use section* for acknowledgement
+\section*{Acknowledgment}
 
-		\begin{figure}[!h]
-			\centering
-			\includegraphics[width=2.3in]{./Assets/FlowChart.png}
-			\caption{System Procedure}
-		\end{figure}
+%This essay is supported by Project to Improve the scientific research basic ability of Middle-aged and Young Teachers (No.2019ky0222,2020KY05033),the Open Funds Guangxi Key Laboratory of Image and Graphic Intelligent Processing, No.GIIP2004, Student's Platform for Innovation and Entrepreneurship Training Program under Grant (No.202010595053. 202010595022)
 
-		% give the statements.
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
 
-		The procedure of our system is: 
-		First, we use OCRNet to segmentate out the documents in pictures. 
-		Second, we extract out the key points to position the documents. 
-		Third, we affine the key points to become normal. 
-		The last, we get the results post processed. 
+% references section
 
-		\subsection{System Implementation}
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
 
-			\subsubsection{Image Segmentation}
+% 导入bib
+\bibliographystyle{IEEEtran}
+\bibliography{Document-Scanner-EI-Paper}
 
-			% introduce the details of OCRNet
 
-			Yuhui Yuan et al proposed OCRNet, a Object-Contextual Representations network for semantic segmentation. 
-			It use the construction made up of HRNet, OCR and SegFix. 
-			Thereinto, OCR method is divided to three stages. 
-			First, it obtains feature representations from backbone network and then estimates a rough semantic segmentation. 
-			The result will be the input of OCR method and named soft object regions.
-			Second, it computes $k$ vector groups according to soft object regions and feature representations and then make it as object region representations. 
-			Third, it computes the relational matrix of pixel representations from the network's bottommost layer and object region representations. 
-			Then it computes the weighted summation of the object region features based on the value of each pixel and the object region feature represented in the relationship matrix. 
-
-			% compare it with U-Net
-			By comparing OCRNet with U-Net, we find that U-Net will generate segmentation region cavities while OCRNet won't. 
-			We input baidu opensource dataset to these networks and get the results they generated. 
-			For those results they generated, it's obvious to find that U-Net generate some holes in some segmentation regions. 
-			Meanwhile we learnt that OCRNet generate almost no holes at the same segmentation regions. 
-			Therefore we use OCRNet to structure the system. 
-			
-			% Show the constructure of OCRNet
-
-			\begin{figure}[!h]
-				\centering
-				\includegraphics[width=2.3in]{./Assets/FlowChart.png}
-				\caption{OCRNet Construction}
-			\end{figure}
-
-			% state the loss: OhemCrossEntropyLoss and DiceLoss
-
-			Different from OCRNet, we use Ohem cross entropy loss and dice loss to optimize the network. 
-
-			Ohem cross entropy loss, as known as online hard example mining cross entropy loss, is used to pay close attention to hard examples and set higher weight of them. 
-			The definition of Ohem cross entropy loss is:
-			$$
-			L_{Ohem} = -\log\bigg( \frac{\exp(prediction[groundtruth])}{\sum_i \exp(prediction[i])} \bigg)
-			$$
-			Thereinto, $prediction$ is a probability density function on groundtruth and $prediction[groundtruth]$ is the probability of prediction on the label of corresponding groundtruth. 
-
-			dice loss, proposed by V-Net!!!, is derived from dice coefficient and often seen as a metrical function to estimate comparability of two samples. 
-			The definition of dice loss is: 
-			$$
-			L_{dice} = 1 - \frac{2|prediction\cap groundtruth|}{|prediction| + |groundtruth|}
-			$$
-			Thereinto, $|prediction\cap groundtruth|$ is the intersection between prediction and groundtruth, $|prediction|, |groundtruth|$ is the number of aggregate prediction and groundtruth. 
-			We set the weight of Ohem cross entropy loss to 1 and the weight of dice loss to 0.2, then combine them into a mixed loss function.  
-
-			\subsubsection{Document Processing}
-
-			% fitting the keyt points
-			% https://blog.csdn.net/ooooocj/article/details/110936343
-			We use Douglas-Peucker algorithm to fit the key points. 
-			We first sample from the curve, extract finite points and connect them with lines. 
-			Meanwhile, we use these lines to keep the original shape of the curve. 
-			
-			
-
-			% affine trasfromation
-			After we finish fitting key points, we use getPerspectiveTransform and warpPerspective to affine the key points in order to reshape the scanning results to the normal shape.
-			% Affine Or Perspective ?
-			% https://cloud.tencent.com/developer/article/1638969
-			% https://blog.csdn.net/Caesar6666/article/details/104158047
-			First we set up coordinate axis system of the fitted result, get base points of the fitted result, and then set the target points of the normal view. 
-			Then we compute the transformation matrix according to the two groups of points. 
-			Last we use the matrix to operate the fitted result and then we will get the normal view. 
-			It is equivalent to that we have it transformed into the normal view by translating, rotating, scaling, shearing.
-
-			\subsubsection{Post Processing}
-
-			% why use it : make image clear & keep colorful (maybe need to mention the low space usage).
-			When we get the result from Document Processing, we still need to post process it. 
-			We aim at making images clear and keeping documents colorful. 
-			Furthermore, it can minimize the images, which is easy and effective to do other oprations like image fixing, image superresolution, etc.
-
-			% recognize background color of raw scanned images
-			First we obtain background colors from the raw scanned images.
-			
-			% separate foreground color out according to various threshold values of background colors
-			Then we separate foreground colors out according to various threshold values of background colors by transfer RGB format into HSV format. 
-			The reason we choose HSV is that it can easily recognize the lightness and the saturation value of each color. 
-			It enable us to filter those unrepresentative color by setting the thresholds of the difference between lightness and hue value or between saturation and hue value. 
-
-			% choose several representive color from foreground colors as index colors
-			The next we select representive colors as index colors from the rest. 
-			And last, we change the less representive colors with corresponding index colors. 
-
-	\section{Experiments}
-
-	% the experiment software & hardware environment
-
-	% the used dataset
-	We use Baidu opensource dataset to go experiments. 
-
-	% the algorithm comparition between OCRNet and UNet. Attached some pictures.
-	We run prediction functionalities of OCRNet and U-Net and then obtaind some results. 
-
-	\begin{figure}[!h]
-		\centering
-		\includegraphics[width=2.3in]{./Assets/final_whole_img.jpg}
-		\caption{Comparition between OCRNet and UNet}
-	\end{figure}
-
-	It's obvious that some masks generated by U-Net have some holes while those makss generated by OCRNet have no holes. 
-	The reason is that OCRNet explicitly enhances the contribution of pixels from the same class of objects when constructing contextual information. 
-	And it solved the problem that UNet is not good at modeling continuous large regions. 
-
-	% the post processing containing adaptive Binarization thresold. 
-	We use adaptive Binarization threshold process to obtain the mask of image.
-	And we gain background colors, extract foreground colors by transferring into HSV format, then filter out representive colors as index colors and at last change colors with corresponding index colors. 
-		
-	\begin{table}[!h]
-		\renewcommand{\arraystretch}{1.3}
-		\caption{The Comparison Of Models' MIoU on baidu opensource dataset}
-		\centering
-		\begin{tabular}{cc} \\
-			\hline
-			Model & MIoU\\
-			\hline
-			OCRNet(Origin) & 94.14\\
-			\hline
-			U-Net & 94.46\\
-			\hline
-			OCRNet(Ours) & 97.255\\
-			\hline
-		\end{tabular}
-		
-	\end{table}
-	
-	\section{Summmary And Conclusion}
-
-	We build up a document scanning system, which can generate clear and colorful results in good quality. 
-	The system is based on OCRNet and it is extended post process to improve the result of OCRNet. 
-	And we use baidu opensource dataset to improve the quality of model training. 
-	Lastly we make up a mixed loss function combining Ohem cross entropy loss and dice loss to train the model in order to enhance the ability of model processing. 
-	
-	% use section* for acknowledgement
-	\section*{Acknowledgment}
-	
-	%This essay is supported by Project to Improve the scientific research basic ability of Middle-aged and Young Teachers (No.2019ky0222,2020KY05033),the Open Funds Guangxi Key Laboratory of Image and Graphic Intelligent Processing, No.GIIP2004, Student's Platform for Innovation and Entrepreneurship Training Program under Grant (No.202010595053. 202010595022)
-	
-	% trigger a \newpage just before the given reference
-	% number - used to balance the columns on the last page
-	% adjust value as needed - may need to be readjusted if
-	% the document is modified later
-	%\IEEEtriggeratref{8}
-	% The "triggered" command can be changed if desired:
-	%\IEEEtriggercmd{\enlargethispage{-5in}}
-	
-	% references section
-	
-	% can use a bibliography generated by BibTeX as a .bbl file
-	% BibTeX documentation can be easily obtained at:
-	% http://www.ctan.org/tex-archive/biblio/bibtex/contrib/doc/
-	% The IEEEtran BibTeX style support page is at:
-	% http://www.michaelshell.org/tex/ieeetran/bibtex/
-	%\bibliographystyle{IEEEtran}
-	% argument is your BibTeX string definitions and bibliography database(s)
-	%\bibliography{IEEEabrv,../bib/paper}
-	%
-	% <OR> manually copy in the resultant .bbl file
-	% set second argument of \begin to the number of references
-	% (used to reserve space for the reference number labels box)
-	
-	\begin{thebibliography}{1}
-		
-		\bibitem{gps}
-		W. Da-chuan, "Algorithm of road information acquirement based on GPS and electronic map," 2010 3rd International Congress on Image and Signal Processing, Yantai, 2010, pp. 4174-4178, doi: 10.1109/CISP.2010.5646704.
-		% Vyacheslavovich T D, Mikhailovich E A, Petrovich N D. Advanced Hough-based method for on-device document localization[J]. Компьютерная оптика, 2021, 45(5): 702-712.
-		% Advanced Hough-based method for on-device document localization
-
-		% Segmentation Transformer: Object-Contextual Representations for Semantic Segmentation
-
-		% Advanced Hough-based method for on-device document localization
-
-		% Real-Time Document Localization in Natural Images by Recursive Application of a CNN
-		
-	\end{thebibliography}
 \end{document}
