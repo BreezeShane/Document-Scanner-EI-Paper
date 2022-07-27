@@ -41,16 +41,20 @@ citecolor=blue]{hyperref}
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{Document Scanner Based on PaddlePaddle}
+\title{DocScanner: Document Location and Enhancement Based on Image Segmentation}
 
-\author{\IEEEauthorblockN{Ziqi Shan$^1$\IEEEauthorrefmark{0},
-Xiaochun Lei$^{* 1,2}$\IEEEauthorrefmark{0}
-and Chang Lu$^1$\IEEEauthorrefmark{0}}
-\IEEEauthorblockA{\IEEEauthorrefmark{0}1.School of computer and information security,\\
+\author{\IEEEauthorblockN{Ziqi Shan\IEEEauthorrefmark{0},
+% Xiaochun Lei$^{* 1,2}$\IEEEauthorrefmark{0}
+Yuying Wang$^*$,\IEEEauthorrefmark{0}
+Shunzhong Wei,\IEEEauthorrefmark{0}
+Xiangmin Li,\IEEEauthorrefmark{0}
+Haowen Pang\IEEEauthorrefmark{0}
+and Xinmei Zhou\IEEEauthorrefmark{0}}
+\IEEEauthorblockA{\IEEEauthorrefmark{0}School of computer and information security,\\
 Guilin University of Electronic Technology,
 Guilin 541004, China;}
-\IEEEauthorblockA{\IEEEauthorrefmark{0}2.Guangxi Key Laboratory of Image and Graphic Intelligent Processing, \\Guilin 541004, China;}
-\IEEEauthorblockA{\IEEEauthorrefmark{1}Corresponding author's e-mail: lxc8125@guet.edu.cn}}
+% \IEEEauthorblockA{\IEEEauthorrefmark{0}2.Guangxi Key Laboratory of Image and Graphic Intelligent Processing, \\Guilin 541004, China;}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Corresponding author's e-mail: getwyy@guet.edu.cn}}
 % use for sepcial paper notices
 %\IEEEspecialpapernotice{(Invited Paper)}
 % make the title area
@@ -62,7 +66,7 @@ However, current methods based on traditional or key point detection have the pr
 In this paper, we proposed a document processing system based on semantic segmentation.
 Our system uses OCRNet to segment documents.
 Then, perspective transformation and other post-processing algorithms are used to obtain well-scanned documents based on the segmentation result.
-Meanwhile, we optimized OCRNet's loss function and reached 97.25 miou on the test dataset.
+Meanwhile, we optimized OCRNet's loss function and reached 97.25 MIoU on the test dataset.
 
 \end{abstract}
 
@@ -201,7 +205,7 @@ This section will introduce the experiment setup, image segmentation, and post-p
 		 GPU & Tesla V100-PCIE-32GB \\
 		 OS & Ubuntu 16.04.3 LTS \\
 		 Programming Language & Python \\
-		 DL Framework & Pytorch \\
+		 DL Framework & PaddlePaddle \\
 		\hline
 	\end{tabular}
 \end{table}
@@ -210,6 +214,7 @@ This section will introduce the experiment setup, image segmentation, and post-p
 
 
 Our experiment environment is shown in Table 1. 
+We use Baidu open source dataset containing 3,000 images. 
 We choose the OCRNet\cite{yuan2020object} and U-net\cite{ronneberger2015u} for image segmentation to compare the result.
 For the post-processing algorithm, we compare the adaptive binarization method and our method described in Section \ref{post-process}.
 For our experiments, we use Baidu's open-source document dataset. 
@@ -281,6 +286,8 @@ We also use an advanced post-processing method to enhance the scanned image.
 
 % use section* for acknowledgement
 \section*{Acknowledgment}
+
+This work is supported by Student’s Platform for Innovation and Entrepreneurship Training Program under Grant (202110595025).
 
 %This essay is supported by Project to Improve the scientific research basic ability of Middle-aged and Young Teachers (No.2019ky0222,2020KY05033),the Open Funds Guangxi Key Laboratory of Image and Graphic Intelligent Processing, No.GIIP2004, Student's Platform for Innovation and Entrepreneurship Training Program under Grant (No.202010595053. 202010595022)
 
