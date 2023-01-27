@@ -41,7 +41,7 @@ citecolor=blue]{hyperref}
 %
 % paper title
 % can use linebreaks \\ within to get better formatting as desired
-\title{DocScanner: Document Location and Enhancement Based on Image Segmentation}
+\title{Docscanner: document location and enhancement based on image segmentation}
 
 \author{\IEEEauthorblockN{Ziqi Shan\IEEEauthorrefmark{0},
 % Xiaochun Lei$^{* 1,2}$\IEEEauthorrefmark{0}
@@ -63,7 +63,7 @@ Guilin 541004, China;}
 
 Document scanning aims to transfer the captured photographs documents into scanned document files. 
 However, current methods based on traditional or key point detection have the problem of low detection accuracy.
-In this paper, we proposed a document processing system based on semantic segmentation.
+In this paper, we were the first to propose a document processing system based on semantic segmentation.
 Our system uses OCRNet to segment documents.
 Then, perspective transformation and other post-processing algorithms are used to obtain well-scanned documents based on the segmentation result.
 Meanwhile, we optimized OCRNet's loss function and reached 97.25 MIoU on the test dataset.
@@ -103,7 +103,7 @@ OCRNet is based on the object-contextual representation scheme and can achieve a
 
 % give the statements.
 
-Figure 1 show the system procedure.
+Figure 1 shows the system procedure.
 First, we use OCRNet\cite{yuan2020object} to get the document mask from the input image.
 Second, we extract the four key points of the documents.
 Then we apply a perspective transformation to convert the document image from a 3D image to a 2D scanned image.
@@ -170,7 +170,7 @@ The process is shown in the Figure 3. First, we use the canny\cite{bao2005canny}
 \label{post-process}
 
 % why use it : make image clear & keep colorful (maybe need to mention the low space usage).
-In the last step, we obtain the 2D view document image. Inorder to get the better quality of the document image, we use post-processing algorithms to enhance the document image. The post-processing algorithms mainly include separating the background and foreground colours.
+At the last step, we obtain the 2D view document image. In order to get the better quality of the document image, we use post-processing algorithms to enhance the document image. The post-processing algorithms mainly include separating the background and foreground colours.
 
 \subsubsection{Separate Background Colors}
 
@@ -257,7 +257,7 @@ OCRNet, because of its context aggregation strategy, performs excellently in doc
 
 \subsubsection{Image Post Processing}
 % the used dataset
-We compare two image post processint method: adaptive binarization and our method. 
+We compare two image post processing method: adaptive binarization and our method. 
 Adaptive binarization is widely used in image enhancement. 
 Our method is based on the idea of separation of foreground and background and is described at Section \ref{separate-foreground-colors}.
 Figure \ref{figure:post-process} show the comparition of the two methods.

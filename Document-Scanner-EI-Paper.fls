@@ -1,7 +1,7 @@
-PWD /home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper
+PWD /home/breezeshane/Data/MyWorkSpace/Document-Scanner-EI-Paper
 INPUT /usr/share/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/breezeshane/AppData/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex
+INPUT /home/breezeshane/Data/MyWorkSpace/Document-Scanner-EI-Paper/Document-Scanner-EI-Paper.tex
 OUTPUT Document-Scanner-EI-Paper.log
 INPUT ./IEEEtran.cls
 INPUT ./IEEEtran.cls
